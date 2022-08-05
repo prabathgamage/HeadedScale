@@ -1,0 +1,108 @@
+html {
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+}
+body {
+    -webkit-tap-highlight-color: transparent;
+}
+.adc-headedScale {
+   width: 100%;
+}
+
+.adc-headedScale a:hover{
+	text-decoration:none;
+}
+.adc-headedScale table {
+   width: 100%;
+   margin:0;
+   padding: 0;
+   border-collapse: separate;
+   border-spacing: 0;
+}
+.adc-headedScale label {
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;          /* Likely future */
+}
+.adc-headedScale th {
+   font-weight: normal;
+   z-index: 3;
+}
+.adc-headedScale th:first-child {
+   z-index: 0;
+}
+.adc-headedScale th {
+   position: relative;
+}
+.adc-headedScale td:hover, .adc-headedScale  input[type="radio"], .adc-headedScale label {
+   cursor: pointer;
+}
+
+/* simplbox lightbox styling */
+#simplbox {
+    position: fixed;
+    top: 0;
+    background-color: #ffffff;
+    border: 1px solid #999999;
+    ms-touch-action: none;
+    touch-action: none;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.75);
+    z-index: 10;
+}
+
+#simplbox-overlay {
+    background-color: #e5e5e5;
+    filter: alpha(opacity=60);
+    background-color: rgba(0, 0, 0, 0.1);
+    position: fixed;
+    z-index: 9;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+#simplbox-loading {
+    position: fixed;
+    z-index: 13;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background-color: #cccccc;
+    -webkit-animation: rotateplane 1.2s infinite ease-in-out;
+    animation: rotateplane 1.2s infinite ease-in-out;
+}
+
+@-webkit-keyframes rotateplane {
+    0% {
+        -webkit-transform: perspective(120px)
+    }
+    50% {
+        -webkit-transform: perspective(120px) rotateY(180deg)
+    }
+    100% {
+        -webkit-transform: perspective(120px) rotateY(180deg) rotateX(180deg)
+    }
+}
+
+@keyframes rotateplane {
+    0% {
+        transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+        -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg)
+    }
+    50% {
+        transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+        -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg)
+    }
+    100% {
+        transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+        -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+    }
+}
+
+.response:focus {
+  background-color: rgba(228,214,0,.1);
+  color: rgba(34,34,34,1.0);
+}

@@ -1,0 +1,235 @@
+{%
+Dim controlAlign
+If (CurrentADC.PropValue("controlAlign") = "center" ) Then
+    controlAlign = "0 auto"
+ElseIf (CurrentADC.PropValue("controlAlign") = "right" ) Then
+    controlAlign = "0 0 0 auto"
+Else
+    controlAlign = "0 auto 0 0"
+EndIf
+Dim columnsCount = CurrentQuestion.Responses.Count
+Dim responsivePercent = (100 / columnsCount).ToString().ToNumber().Round(1)
+Dim borderColour = CurrentADC.PropValue("borderColour")
+Dim borderThickness = CurrentADC.PropValue("borderThickness")
+Dim borderStyle = CurrentADC.PropValue("borderStyle")
+Dim dropShadow = CurrentADC.PropValue("dropShadow")
+Dim headBgPrimaryColor = CurrentADC.PropValue("headBgPrimaryColor")
+Dim oddBgPrimaryColor = CurrentADC.PropValue("oddBgPrimaryColor")
+Dim evenBgPrimaryColor = CurrentADC.PropValue("evenBgPrimaryColor")
+Dim hoverBgPrimaryColor = "228,214,0"
+Dim selectedBgPrimaryColor = CurrentADC.PropValue("selectedBgPrimaryColor")
+Dim highlightBgPrimaryColor = CurrentADC.PropValue("highlightBgPrimaryColor")
+Dim headTextOrientation = CurrentADC.PropValue("headTextOrientation")
+
+Dim headerTextAlign = CurrentADC.PropValue("headerRowAlign")
+Dim symbolPosition = "right"
+IF headerTextAlign = "right" Then
+		symbolPosition = "left"
+EndIF
+
+%}
+
+#adc_{%= CurrentADC.InstanceId %} {
+    max-width: {%= CurrentADC.PropValue("controlWidth") %};
+    margin: {%= controlAlign %};
+}
+
+#adc_{%= CurrentADC.InstanceId %} .othersColumns, #adc_{%= CurrentADC.InstanceId %} .response, #adc_{%= CurrentADC.InstanceId %} .emptyCell {
+    width: {%= responsivePercent + "%" %};
+}
+#adc_{%= CurrentADC.InstanceId %} table {
+    {% If (borderThickness = "none") Then %}
+        border: none;
+    {% Else %}
+        border: {%= borderThickness %} {%= borderStyle %} rgb({%= borderColour %});
+    {% EndIf %}
+}
+#adc_{%= CurrentADC.InstanceId %} tr {
+    {% If (borderThickness = "none") Then %}
+        border: none;
+    {% Else %}
+        border: {%= borderThickness %} {%= borderStyle %} rgb({%= borderColour %});
+    {% EndIf %}
+}
+#adc_{%= CurrentADC.InstanceId %} td {
+    {% If (borderThickness = "none") Then %}
+        border-top: none;
+    {% Else %}
+        border-top: {%= borderThickness %} {%= borderStyle %} rgb({%= borderColour %});
+    {% EndIf %}
+}
+{% If (CurrentADC.PropValue("showBorderColumn") = "yes") Then %}
+/* if yes border column*/
+#adc_{%= CurrentADC.InstanceId %} td, #adc_{%= CurrentADC.InstanceId %} th {
+    {% If (borderThickness = "none") Then %}
+        border-right: none;
+    {% Else %}
+        border-right: {%= borderThickness %} {%= borderStyle %} rgb({%= borderColour %});
+    {% EndIf %}
+}
+#adc_{%= CurrentADC.InstanceId %} td:last-child, #adc_{%= CurrentADC.InstanceId %} th:last-child {
+    border-right: 0;
+}
+{% EndIf %}
+#adc_{%= CurrentADC.InstanceId %} table {
+    {% If (dropShadow = "yes") Then %}
+    box-shadow: 0px 2px 4px rgba(0,0,0,.2);
+    {% EndIf %}
+    border-radius: {%= CurrentADC.PropValue("borderRadius") %};
+}
+#adc_{%= CurrentADC.InstanceId %} th:first-child {
+    border-top-left-radius: {%= CurrentADC.PropValue("borderRadius") %};
+}
+#adc_{%= CurrentADC.InstanceId %} th:last-child {
+    border-top-right-radius: {%= CurrentADC.PropValue("borderRadius") %};
+}
+#adc_{%= CurrentADC.InstanceId %} tr:last-child td:first-child {
+    border-bottom-left-radius: {%= CurrentADC.PropValue("borderRadius") %};
+}
+#adc_{%= CurrentADC.InstanceId %} tr:last-child td:last-child {
+    border-bottom-right-radius: {%= CurrentADC.PropValue("borderRadius") %};
+}
+#adc_{%= CurrentADC.InstanceId %} tbody tr:first-child td:first-child {
+    border-top-left-radius: {%= CurrentADC.PropValue("borderRadius") %};
+}
+#adc_{%= CurrentADC.InstanceId %} tbody tr:first-child td:last-child {
+    border-top-right-radius: {%= CurrentADC.PropValue("borderRadius") %};
+}
+
+/* Tr odd style */
+#adc_{%= CurrentADC.InstanceId %} tr {
+    background-color: rgba({%= oddBgPrimaryColor %},1.0);
+    color: rgba({%= CurrentADC.PropValue("oddFontColor") %},1.0);
+    /*transition: all ease-in-out .2s;*/
+}
+#adc_{%= CurrentADC.InstanceId %} tr .items {
+    color: rgba({%= CurrentADC.PropValue("oddFontColor") %},1.0);
+    /*transition: all ease-in-out .2s;*/
+}
+#adc_{%= CurrentADC.InstanceId %} tr label {
+    color: rgba({%= CurrentADC.PropValue("oddFontColor") %},1.0);
+}
+/* Tr even style */
+#adc_{%= CurrentADC.InstanceId %} tr:nth-child(even) {
+    background-color: rgba({%= evenBgPrimaryColor %},1.0);
+    color: rgba({%= CurrentADC.PropValue("evenFontColor") %},1.0);
+    /*transition: all ease-in-out .2s;*/
+}
+#adc_{%= CurrentADC.InstanceId %} tr:nth-child(even) label {
+    color: rgba({%= CurrentADC.PropValue("evenFontColor") %},1.0);
+}
+/* Hover style - if show hightlight row on hover */
+#adc_{%= CurrentADC.InstanceId %} tr:hover{
+    {% If (CurrentADC.PropValue("hightlightRowOnHover") = "yes") Then %}
+    background-color: rgba({%= highlightBgPrimaryColor %},1.0);
+    color: rgba({%= CurrentADC.PropValue("highlightFontColor") %},1.0);
+    {% EndIf %}
+}
+{% If ((Browser.Support("touch") = False) and (Browser.Support("javascript"))) Then %}
+#adc_{%= CurrentADC.InstanceId %} .response:hover {
+    background-color: rgba({%= hoverBgPrimaryColor.ToRGB() %},.1);
+    color: rgba({%= CurrentADC.PropValue("hoverFontColor") %},1.0);
+}
+#adc_{%= CurrentADC.InstanceId %} label:hover {
+    color: rgba({%= CurrentADC.PropValue("hoverFontColor") %},1.0);
+}
+{% EndIf %}
+/* Selected style */
+#adc_{%= CurrentADC.InstanceId %} .selected, #adc_{%= CurrentADC.InstanceId %} .selected:hover {
+    background-color: rgba({%= selectedBgPrimaryColor %},1.0);
+    color: rgba({%= CurrentADC.PropValue("selectedFontColor") %},1.0) !important;
+    /*transition: all ease-in-out .2s;*/
+}
+#adc_{%= CurrentADC.InstanceId %} .selected label, #adc_{%= CurrentADC.InstanceId %} .selected label:hover {
+    color: rgba({%= CurrentADC.PropValue("selectedFontColor") %},1.0) !important;
+}
+/* Head style */
+#adc_{%= CurrentADC.InstanceId %} th, #adc_{%= CurrentADC.InstanceId %} th:hover {
+    background-color: rgba({%= headBgPrimaryColor %},1.0);
+    color: rgba({%= CurrentADC.PropValue("headFontColor") %},1.0);
+    font-size: {%= CurrentADC.PropValue("headerRowFontSize") %};
+}
+#adc_{%= CurrentADC.InstanceId %} th .head {
+    padding: 5px;
+    text-align: {%= CurrentADC.PropValue("headerRowAlign") %};
+}
+{% If (CurrentADC.PropValue("headTextOrientation") = "vertical") Then %}
+	#adc_{%= CurrentADC.InstanceId %} th .head:last-child {
+    writing-mode:tb-rl;
+    height: max-content;
+    max-height: 200px;
+}
+{% EndIf %}
+#adc_{%= CurrentADC.InstanceId %} td {
+    padding: 10px 20px 10px 10px;
+    text-align: center;
+}
+
+#adc_{%= CurrentADC.InstanceId %} .headerRow td {
+    padding: 10px 20px 10px 10px;
+    text-align: {%= CurrentADC.PropValue("headerRowAlign") %} !important;
+    border: 1px solid rgb({%= borderColour %});
+}
+#adc_{%= CurrentADC.InstanceId %} .response {
+    {% If (CurrentADC.PropValue("responsiveDirection") = "horizontal") Then %}
+    padding: 10px 0 10px 10px;
+    {% Else %}
+    padding: 10px;
+    {% EndIf %}
+    position: relative;
+}
+
+#adc_{%= CurrentADC.InstanceId %} th, #adc_{%= CurrentADC.InstanceId %} .response {
+
+}
+
+#adc_{%= CurrentADC.InstanceId %} th {
+    vertical-align: {%= CurrentADC.PropValue("headerRowVerticalAlign") %};
+}
+#adc_{%= CurrentADC.InstanceId %} .response {
+    vertical-align: {%= CurrentADC.PropValue("headerRowVerticalAlign") %};
+}
+
+#adc_{%= CurrentADC.InstanceId %} label.responsesitems {
+    display: inline-block;
+}
+#adc_{%= CurrentADC.InstanceId %} .hiddens, #adc_{%= CurrentADC.InstanceId %} .items.hiddens {
+    display: none;
+}
+#adc_{%= CurrentADC.InstanceId %} .responsesitems img {
+	    width: 100%;
+      max-width: {%:= responsivePercent %};
+      clear: both;
+}
+{% If (CurrentADC.PropValue("showHeader") = "no") Then %}
+#adc_{%= CurrentADC.InstanceId %} thead tr {
+    display: none;
+}
+#adc_{%= CurrentADC.InstanceId %} table {
+    border-top: none;
+}
+{% EndIf %}
+
+#adc_{%= CurrentADC.InstanceId %} .response input, #adc_{%= CurrentADC.InstanceId %} .response label.askia-radio {
+        display: none;
+}
+
+#adc_{%= CurrentADC.InstanceId %} .imgZoom {
+    right: 5px;
+}
+
+#adc_{%= CurrentADC.InstanceId %} .emptyCell {
+    display: table-cell;
+    cursor: auto;
+}
+
+@media screen and (max-width: {%= CurrentADC.PropValue("responsiveWidth") %}) {
+
+  #adc_{%= CurrentADC.InstanceId %} th .head {
+    padding-left: 0;
+    padding-right: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.9em;
+  }
+}

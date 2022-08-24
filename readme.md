@@ -1,10 +1,5 @@
-Responsive Table
-================
-
-Demo
--------
-
-[Demo of the Responsive Table control](http://demo.askia.com/WebProd/cgi-bin/AskiaExt.dll?Action=StartSurvey&SurveyName=ADC2_ResponsiveTable)
+HeadedScale adc
+===============
 
 Tested in
 -----------
@@ -14,7 +9,7 @@ Tested in
 Dependencies
 -----------------
 
-    * No dependencies (HTML, CSS, Javascript (Vanilla))
+    * jquery-3.4.1.min.js, simplebox.js
 
 Notes
 -------

@@ -7,8 +7,8 @@
   <info>
     <name>HeadedScale</name>
     <guid>90943cf5-352d-489a-8c20-e80ce45c6717</guid>
-    <version>1.0.2</version>
-    <date>2022-01-27</date>
+    <version>1.1.0</version>
+    <date>2022-08-24</date>
     <description><![CDATA[HeadedScale ADC]]></description>
     <company>Askia</company>
     <author><![CDATA[Prabath Gamage <prabath@askia.com>]]></author>
@@ -18,29 +18,34 @@
       <category>General</category>
     </categories>
     <constraints>
-      <constraint on="questions" chapter="false" single="true" multiple="false" numeric="false" date="false" open="false" requireParentLoop="false" requireLoopDepth="0" manageHeader="true" manageSemiOpen="false" />
-      <constraint on="controls" responseblock="true" label="false" textbox="false" checkbox="false" listbox="false" radiobutton="true" />
+      <constraint on="questions" chapter="false" single="true" multiple="false" numeric="false" date="false" open="false" requireParentLoop="false"
+         requireLoopDepth="0" manageHeader="true" manageSemiOpen="false" />
+      <constraint on="controls" responseblock="true" label="true" textbox="false" checkbox="false" listbox="false" radiobutton="true" />
       <constraint on="responses" max="*" min="*" />
     </constraints>
   </info>
   <outputs defaultOutput="default">
-    <output id="default" manageLoopDepth="0">
+    <output id="default" manageLoopDepth="1">
       <description><![CDATA[Default output]]></description>
       <condition><![CDATA[Browser.Support("javascript")]]></condition>
       <content fileName="headedScale.css" type="css" mode="static" position="head" />
       <content fileName="styles.css" type="css" mode="dynamic" position="head" />
       <content fileName="default.html" type="html" mode="dynamic" position="placeholder" />
+      <content fileName="single_loop.html" type="html" mode="dynamic" position="none" />
+      <content fileName="single.html" type="html" mode="dynamic" position="none" />
       <content fileName="simplbox.js" type="javascript" mode="static" position="foot" />
       <content fileName="headedScale.js" type="javascript" mode="static" position="foot" />
       <content fileName="Initializer.js" type="javascript" mode="dynamic" position="foot" />
       <content fileName="jquery-3.4.1.min.js" type="javascript" mode="static" position="head" />
     </output>
-    <output id="fallback" manageLoopDepth="0">
+    <output id="fallback" manageLoopDepth="1">
       <description><![CDATA[Fallback output]]></description>
       <condition><![CDATA[Not(Browser.Support("javascript"))]]></condition>
       <content fileName="headedScale.css" type="css" mode="static" position="head" />
       <content fileName="styles.css" type="css" mode="dynamic" position="head" />
       <content fileName="default.html" type="html" mode="dynamic" position="placeholder" />
+      <content fileName="single_loop.html" type="html" mode="dynamic" position="none" />
+      <content fileName="single.html" type="html" mode="dynamic" position="none" />
     </output>
   </outputs>
   <properties>
@@ -102,6 +107,16 @@
         <options>
           <option value="yes" text="Yes" />
           <option value="no" text="No" />
+        </options>
+      </property>
+    </category>
+    <category id="loops" name="Loop Questions">
+      <property xsi:type="standardProperty" id="isInLoop" name="Is in loop" type="string" mode="dynamic" require="true" visible="true">
+        <description><![CDATA[Turn this on to use the control in a loop]]></description>
+        <value><![CDATA[0]]></value>
+        <options>
+          <option value="1" text="Yes" />
+          <option value="0" text="No" />
         </options>
       </property>
     </category>

@@ -1,0 +1,72 @@
+{%
+  Dim plr = CurrentQuestion.ParentLoop.AvailableAnswers
+  Dim x
+  For x = 1 To plr.Count
+%}
+<div>{%:= plr[x].Caption %}</div><br>
+
+<input type="hidden" id="input_{%= CurrentQuestion.Iteration(plr[x].Index).InputName() %}" name="{%= CurrentQuestion.Iteration(plr[x].Index).InputName() %}" value="{%= CurrentQuestion.Iteration(plr[x].Index).inputValue() %}">
+
+<table>
+  <thead id="adc_{%= CurrentADC.InstanceId %}_thead_{%= x %}">
+    <tr>
+     {%
+      Dim ar = CurrentQuestion.AvailableResponses
+
+      Dim inputName = ""
+      Dim inputId = ""
+      Dim inputValue = ""
+      Dim caption = ""
+      Dim arCaption = ""
+      Dim arPath = ""
+      Dim attrChecked = ""
+      Dim isExclusive = ""
+      Dim isAskiaExclusive = ""
+      Dim isSelected = ""
+      Dim chCount
+
+      Dim j = 0
+      Dim i = 0
+
+      For i = 1 To ar.Count
+        IF (ar[i].IsHeader = TRUE) THEN
+          arCaption = ar[i].Caption
+          chCount = ar[i].Children.Count
+        %}
+          <th class="othersColumns responsesitems" colspan="{%:= chCount %}">
+            <div class="head padright">{%:= arCaption %}</div>
+          </th>
+        {% EndIF %}
+      {% Next i %}
+    </tr>
+  </thead>
+  <tbody>
+
+      <tr data-id="1" class="askiarow">
+        {% 	For j = 1 To ar.Count
+            IF (ar[j].IsHeader <> TRUE) THEN
+              inputName   = CurrentQuestion.Iteration(plr[x].Index).InputName()
+              inputId     = (inputName + "_" + j).Replace("U", "askia-input")
+              inputValue  = ar[j].InputValue()
+              caption     = ar[j].Caption
+              isExclusive = On((ar[j].IsExclusive), " exclusive", "")
+              isAskiaExclusive = On((ar[j].IsExclusive), "askia-exclusive", "")
+              isSelected = On(CurrentQuestion.AvailableAnswers.Index Has ar[j].Index, " selected", "")
+              %}
+
+              <td class="response{%:= isExclusive %}{%:= isSelected %}">
+                  <input type="radio" id="{%= inputId %}" class="{%:= isAskiaExclusive %}" name="{%= inputName %}" value="{%= inputValue %}" />
+                  <label for="{%= inputId %}" class="askia-radio"><span hidden>Label</span></label>
+                  <label for="{%= inputId %}" class="responsesitems">
+                      {%:= caption %}
+                  </label>
+              </td>
+            {% EndIF %}
+        {% Next j %}
+      </tr>
+
+  </tbody>
+</table>
+<br>
+<br>
+{% Next x %}

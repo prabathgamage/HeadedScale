@@ -11,6 +11,9 @@ $realpath = Get-Location
 # folder-name
 $directoryname = (get-item $realpath).name
 
+# bin dir path
+$bpath = "$($realpath)\bin"
+
 # adx file paths
 $fpath = "$($realpath)\bin\$($directoryname).adc"
 $fpath2 = "$($realpath)\bin\$($directoryname).adp"
@@ -20,6 +23,11 @@ $zpath = "$($realpath)\bin\$($directoryname).zip"
 
 # destination path of adc/adp
 $adxpath = $fpath
+
+# If the bin directory doesn't exist, create it
+if(!(Test-Path $bpath)){
+    New-Item -Path "$($realpath)" -Name "bin" -ItemType "directory"
+}
 
 # compress files and folders to directoryname.zip
 $compress = @{

@@ -96,6 +96,7 @@
    */
   function clickTable (event, that) {
     var el = event.target || event.srcElement;
+
     if (el.className.indexOf('headerRow') >= 0) {
       $(that).next().toggle();
     }
@@ -103,14 +104,7 @@
       if (el.lastElementChild.tagName == 'LABEL') {
         document.getElementById(el.lastElementChild.attributes.for.value).click();
       } else {
-        // el.lastElementChild.children[0].style.display = "";
         document.getElementById(el.children[2].attributes.for.value).click();
-      }
-      if (window.askia &&
-                window.arrLiveRoutingShortcut &&
-                window.arrLiveRoutingShortcut.length > 0 &&
-                window.arrLiveRoutingShortcut.indexOf(that.currentQuestion) >= 0) {
-        askia.triggerAnswer();
       }
     } else if (el.nodeName === 'IMG' && el.parentNode.parentNode.className.indexOf('response') >= 0) {
   		event.preventDefault();
@@ -120,26 +114,28 @@
       if (el.checked) {
         addClass(el.parentNode, 'selected');
         manageExclusive(el);
+        if (that.isInLoop) $("#input_" + el.name).val(el.value);
+
+        if (window.askia &&
+                  window.arrLiveRoutingShortcut &&
+                  window.arrLiveRoutingShortcut.length > 0 &&
+                  window.arrLiveRoutingShortcut.indexOf(that.currentQuestion) >= 0) {
+          askia.triggerAnswer();
+        }
+
         if (el.parentElement.lastElementChild.children[0]) {
           el.parentElement.lastElementChild.children[0].style.display = "block";
         }
       }
-      // if (that.accordion && window.innerWidth < that.responsiveWidth ) {
-      //   if (el.parentNode.lastElementChild.nodeName != 'DIV') {
-      //     setTimeout(function (){
-      //       if (el.classList.contains('askia-exclusive')) {
-      //         displayNext(that.instanceId);
-      //       }
-      //     }, 150);
-      //   }
-      // }
-      if (window.askia &&
-                window.arrLiveRoutingShortcut &&
-                window.arrLiveRoutingShortcut.length > 0 &&
-                window.arrLiveRoutingShortcut.indexOf(that.currentQuestion) >= 0) {
-        askia.triggerAnswer();
-      }
     }
+
+    if (window.askia &&
+              window.arrLiveRoutingShortcut &&
+              window.arrLiveRoutingShortcut.length > 0 &&
+              window.arrLiveRoutingShortcut.indexOf(that.currentQuestion) >= 0) {
+      askia.triggerAnswer();
+    }
+
   }
 
   /**
@@ -258,16 +254,6 @@
   }
 
     /**
-     * Hide all responses of the page
-     */
-  function hideResponses (instanceId) {
-    // var responses = document.querySelectorAll('#adc_' + instanceId + ' .response');
-    // for (var i = 0, l = responses.length; i < l; i++) {
-    //   responses[i].style.display = 'none';
-    // }
-  }
-
-    /**
      * Find the first empty row
      */
   function findFirstEmptyRow (instanceId) {
@@ -290,9 +276,9 @@
       return null;
   }
 
-    /**
-     * Show all responses of a row
-     */
+  /**
+   * Show all responses of a row
+   */
   function displayRow (tr) {
     if (!tr.classList.contains('headerRow')) {
       tr.querySelector('.askiadisplay').classList.add('active');
@@ -308,41 +294,13 @@
     }
   }
 
-    /**
-     * Display the next row
-     */
-  // function displayNext (instanceId) {
-  //   hideResponses(instanceId);
-  //   var current = document.querySelector('#adc_' + instanceId + ' .active');
-  //   if (!current) return;
-  //   var nextElems = current.parentElement.parentElement.parentElement.children;
-  //   var index = -1
-  //   for (var i = 0, j = nextElems.length; i < j; i++) {
-  //     if (typeof(nextElems[i].children[0].children[0]) !== "undefined") {
-  //       if (!nextElems[i].children[0].children[0].classList.contains('checkmark') && !nextElems[i].children[0].children[0].classList.contains('active')) {
-  //           index = i;
-  //           break;
-  //       }
-  //     }
-  //   }
-  //   if (nextElems[index] && index !== -1) {
-  //     displayRow(nextElems[index]);
-  //   }
-  //
-  //   if (current) {
-  //     current.classList.remove('active');
-  //   }
-  // }
-
-    /**
-     * Creates a new instance of the HeadedScale
-     *
-     * @param {Object} options Options of the HeadedScale
-     * @param {String} options.instanceId=1 Id of the ADC instance
-     */
+  /**
+   * Creates a new instance of the HeadedScale
+   *
+   * @param {Object} options Options of the HeadedScale
+   * @param {String} options.instanceId=1 Id of the ADC instance
+   */
   function HeadedScale (options) {
-    console.log("headedScale");
-
     this.options = options;
     this.instanceId = options.instanceId || 1;
     this.headerFixed = options.headerFixed || 0;
@@ -351,6 +309,7 @@
     this.responsiveWidth = parseInt(options.responsiveWidth);
     this.type = options.type || 'single';
     this.currentWidth = window.innerWidth;
+    this.isInLoop = Boolean(options.isInLoop);
 
     addEvent(document.getElementById('adc_' + this.instanceId), 'click',
      (function (passedInElement) {
@@ -367,13 +326,6 @@
         }
       };
     }(this)));
-
-    addEvent(document.getElementById('adc_' + this.instanceId), 'click',
-     (function (passedInElement) {
-       return function (e) {
-         clickTable(e, passedInElement);
-       };
-     }(this)));
 
     addEvent(window, 'resize',
      (function (passedInElement) {
@@ -399,9 +351,19 @@
       simplboxConstructorCall(responseszooms[l2].getAttribute('data-id'));
     }
 
+    // Check responses first, select them according to the value
     var responses = document.getElementById('adc_' + this.instanceId).querySelectorAll('.response');
     for (var i = 0; i < responses.length; i++) {
-      if (responses[i].classList.contains("selected")) responses[i].firstElementChild.checked = true;
+      if (this.isInLoop) {
+        responses[i].classList.remove("selected");
+        var value = $("#input_" + responses[i].firstElementChild.name).val();
+        if (responses[i].firstElementChild.value == value){
+          responses[i].classList.add("selected");
+          responses[i].firstElementChild.checked = true;
+        }
+      } else {
+        if (responses[i].classList.contains("selected")) responses[i].firstElementChild.checked = true;
+      }
     }
 
     if (window.askia &&

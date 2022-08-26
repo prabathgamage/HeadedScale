@@ -3,7 +3,8 @@
   Dim x
   For x = 1 To plr.Count
 %}
-<div>{%:= plr[x].Caption %}</div><br>
+
+<div class="askia-question-label">{%:= plr[x].Caption %}</div><br>
 
 <input type="hidden" id="input_{%= CurrentQuestion.Iteration(plr[x].Index).InputName() %}" name="{%= CurrentQuestion.Iteration(plr[x].Index).InputName() %}" value="{%= CurrentQuestion.Iteration(plr[x].Index).inputValue() %}">
 
